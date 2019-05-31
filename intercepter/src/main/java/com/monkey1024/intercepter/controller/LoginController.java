@@ -11,6 +11,7 @@ public class LoginController {
     }
     @GetMapping("/add")
     public String add(){
+        System.out.println("wuzhiqiangdashuaige");
         return "add";
     }
 }
