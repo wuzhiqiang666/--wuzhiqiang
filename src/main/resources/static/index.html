@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>学生成绩管理系统</title>
+	</head>
+	<body>
+	当前用户数量：<span id="num"></span><button id="btbn">男生</button><button id="add">添加</button>
+	<button id="order">年龄排序</button>
+	<table border="1px">
+		<tr>
+			<th>编号</th>
+			<th>ID</th>
+			<th>姓名</th>
+			<th>年龄</th>
+			<th>分数</th>
+			<th>性别</th>
+			<th>修改</th>
+			<th>删除</th>
+		</tr>
+		<tbody id="tbody">
+		</tbody>
+	</table>	
+	</body>
+<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+<script>
+	$(function(){
+        findStudents("/student");
+        showNum(0);
+        $("#add").click(function(){
+            $(location).attr("href","addstudent.html");
+		});
+        $("#order").click(
+            function () {
+				findStudents("/order")
+            }
+		)
+        $("#tbody").on("click","#delete",
+            function(){
+             var flag = confirm("是否删除？");
+             if (flag){
+                 deleteStudent(this);
+			 }
+			}
+		)
+		$("#tbody").on("click","#update",
+		    function(){
+		        var id =this.parentNode.parentNode.firstChild.nextSibling.innerHTML;
+		        alert(id);
+		        $(location).attr('href','updatestudent.html?id='+id);
+			}
+		)
+		$("#btbn").click(
+		    function () {
+                var i =$("#btbn").html();
+                var j = 0;
+                if(i=="男生"){
+                    $("#btbn").html("女生");
+					j=1;
+				}else{
+                    $("#btbn").html("男生");
+                    j=0;
+				}
+                showNum(j);
+            }
+		)
+	})
+
+
+	function deleteStudent(obj){
+	    var id = obj.parentNode.parentNode.firstChild.nextSibling.innerHTML;
+	    $.ajax({
+			url:"/student/"+id,
+			type:"delete",
+			dataType:"json",
+		})
+        findStudents("/student");
+
+	}
+	function showNum(sex) {
+		$.ajax({
+			url:"/studentnum/"+sex,
+			type:"get",
+			dataType:"json",
+			success:function (result) {
+			    console.log(result);
+				$("#num").html(result)
+            }
+		})
+    }
+    function findStudents(url){
+        $.ajax({
+            type:"get",
+            url:url,
+            dataType:"json",
+            success:function(result){
+                var datatr="";
+                $.each(result,function(i,n){
+                    datatr+=	"<tr>"+
+                        "<td>" + (i+1) + "</td>"+
+                        "<td>" + n.id + "</td>"+
+                        "<td>" + n.name + "</td>"+
+                        "<td>" + n.age + "</td>"+
+                        "<td>" + n.score + "</td>"+
+                        "<td>" +  (n.sex==0?"男":"女") + "</td>"+
+                        "<td><input type='button' value='修改' id='update'></td> "+
+                        "<td><input type='button' value='删除' id='delete'></td> "+
+                        "</tr>";
+                })
+                $("#tbody").html(datatr);
+            }
+        });
+    }
+</script>
+</html>

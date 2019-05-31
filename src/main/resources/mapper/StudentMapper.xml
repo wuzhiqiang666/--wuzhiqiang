@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.monkey1024.studentmanage.mapper.StudentMapper">
+    <select id="selectAllStudent" resultType="Student">
+        SELECT id ,name,age,score,sex FROM student
+    </select>
+
+    <delete id="deleteStudent" >
+        DELETE FROM student WHERE id=#{id}
+    </delete>
+
+    <select id="studentNum" resultType="Integer">
+        SELECT COUNT(sex) FROM student WHERE sex=#{sex}
+    </select>
+
+    <insert id="insertStudent">
+        INSERT INTO student(name,age,score,sex)VALUES(#{name},#{age},#{score},#{sex})
+    </insert>
+
+    <update id="updateStudent">
+        UPDATE student SET name=#{name},age=#{age},score=#{score},sex=#{sex} WHERE id=#{id}
+    </update>
+</mapper>

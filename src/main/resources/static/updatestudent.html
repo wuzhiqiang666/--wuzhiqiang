@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改学生信息</title>
+</head>
+<body>
+<form id="form">
+    <input type="hidden" name="id" id="mid">
+    姓名<input type="text" name="name"><br/>
+    年龄<input type="text" name="age"><br/>
+    分数<input type="text" name="score"><br/>
+    性别<select name="sex">
+    <option  value="0">男</option>
+    <option  value="1">女</option>
+</select><br/>
+    <input id="btn" type="button" value="修改">
+</form>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script>
+    $(function () {
+        var idc = location.search.substr(1).split("=");
+        var  id = idc[1];
+        $("#mid").val(id);
+        $("#btn").click(function () {
+            var jf = $("#form").serializeArray();
+            var jd ={};
+            $.each(jf,function (i,n) {
+                jd[n.name]=n.value;
+            })
+            var params = JSON.stringify(jd);
+            $.ajax({
+                url:"/student",
+                type:"put",
+                data:params,
+                dataType:"json",
+                contentType:"application/json",
+                success:function(result){
+                    if(result=="true"){
+                        alert("修改成功！");
+                        $(location).attr("href","index.html");
+                    }else {
+                        alert("修改失败！");
+                    }
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>
